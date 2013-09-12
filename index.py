@@ -4,6 +4,7 @@ import os
 import time
 import config
 from urllib import quote
+from zipstream import ZipStream
 
 # load config file
 paths = config.paths
@@ -21,6 +22,7 @@ render = web.template.render('template')
 
 urls = (
     '/favicon.ico',"Ico",
+    '/_/([\w\d]+)/(.*)','ZipDownload',
     '/([\w\d]+)/(.*)','Index',
     '/([\w\d]+)', 'Redirect'
 )
@@ -52,6 +54,19 @@ def handlePath(name, _path):
     path = os.path.join(root, _path)
     return (_path, path, uploadable)
 
+class ZipDownload:
+    def GET(self, name, _path):
+        print name, _path
+        try:
+            _path, path, uploadable = handlePath(name, _path)
+        except RuntimeError as err:
+            return web.notfound()
+        if not os.path.isdir(path):
+            return web.notfound()
+        web.header('Content-type', 'application/zip')
+        web.header('Content-disposition', 'attachment; filename="%s.zip"' % name)
+        return ZipStream(path).__iter__()
+
 class Index:
     def GET(self, name, _path):
         try:
@@ -76,7 +91,8 @@ class Index:
                 item['href'] = name + '/' +  \
                         quote(os.path.join(_path, filename))
                 items.append(item)
-            return render.layout(sorted(items, key=lambda x: x['name'].lower()), uploadable)
+            return render.layout(sorted(items, key=lambda x: x['name'].lower()), 
+                    uploadable, '/_/%s/%s'%(name, quote(_path)))
         if os.path.isfile(path):
             web.header('Content-Type','application/octet-stream')
             web.header('Content-disposition', 
@@ -91,7 +107,7 @@ class Index:
             _path, path, uploadable = handlePath(name, _path)
         except RuntimeError as err:
             return web.notfound()
-        if not os.path.isdir(path):
+        if not os.path.isdir(path) or not uploadable:
             return web.notfound()
         x = web.input(file={})
         if 'file' in x:
