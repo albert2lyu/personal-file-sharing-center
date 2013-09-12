@@ -1,2 +1,6 @@
 # the directory you want to share
-root = "/home/upload/"
+
+paths = {
+        'test': ('/tmp/tmp', False), 
+        'test2': ('/tmp/tmp/test', True)
+        }
