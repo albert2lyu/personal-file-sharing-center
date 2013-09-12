@@ -21,7 +21,6 @@ types = [
 render = web.template.render('template')
 
 urls = (
-    '/favicon.ico',"Ico",
     '/_/([\w\d]+)/(.*)','ZipDownload',
     '/([\w\d]+)/(.*)','Index',
     '/([\w\d]+)', 'Redirect'
@@ -30,10 +29,6 @@ urls = (
 class Redirect:
     def GET(self, name):
         return web.redirect('/%s/' % name)
-
-class Ico:
-    def GET(self):
-        return open("static/img/favicon.ico").read()
 
 def getSizeForHuman(size):
     if size < 1024:
