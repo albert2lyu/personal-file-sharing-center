@@ -22,7 +22,12 @@ render = web.template.render('template')
 urls = (
     '/favicon.ico',"Ico",
     '/([\w\d]+)/(.*)','Index',
+    '/([\w\d]+)', 'Redirect'
 )
+
+class Redirect:
+    def GET(self, name):
+        return web.redirect('/%s/' % name)
 
 class Ico:
     def GET(self):

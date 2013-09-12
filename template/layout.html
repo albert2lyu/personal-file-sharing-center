@@ -132,10 +132,13 @@ $code:
                 $if uploadable:
                     <form id="upload" action="" method="POST" enctype="multipart/form-data" target="ifm">
                         <fieldset>
-                            <legend>File Upload:</legend>
-                            <div>
-                                <input type="file" id="fileselect" name="file" / title="choose a file" onchange="this.form.submit();">
-                                <div id="filedrag">or drop the file here</div>
+                            <div class="row">
+                            <div class="span2" style="padding: 22px 0 0 20px">
+                            <input type="file" id="fileselect" name="file" / title="Upload file" onchange="this.form.submit();">
+                            </div>
+                            <div class="span8">
+                            <div id="filedrag">or drop the file here</div>
+                            </div>
                             </div>
                         </fieldset>
                     </form>
