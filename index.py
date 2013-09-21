@@ -83,13 +83,14 @@ class Index:
                 item['name'] = filename
                 if os.path.isdir(realname):
                     item['type'] = 'dir'
+                    item['size'] = ' - '
                 else:
+                    item['size'] = getSizeForHuman(os.path.getsize(realname))
                     item['type'] = os.path.splitext(filename)
                 if item['type'] not in types:
                     item['type'] = 'general'
                 item["time"] = time.strftime("%H:%M:%S %Y-%m-%d",
                         time.localtime(os.path.getmtime(realname))) 
-                item['size'] = getSizeForHuman(os.path.getsize(realname))
                 item['href'] = name + '/' +  \
                         quote(os.path.join(_path, filename))
                 items.append(item)
