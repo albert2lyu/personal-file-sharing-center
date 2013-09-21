@@ -1,5 +1,7 @@
 # Web文件分享
 
+![](https://github.com/blahgeek/personal-file-sharing-center/raw/master/img/screenshot.png)
+
 类似SimpleHTTPServer的web文件分享页面，但是：
 
 - 可以配置很多个文件夹（类似Dropbox的分享）
