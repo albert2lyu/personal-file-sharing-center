@@ -2,12 +2,9 @@
 import web
 import os
 import time
-import config
+import sqlite3
 from urllib import quote
 from zipstream import ZipStream
-
-# load config file
-paths = config.paths
 
 types = [
     ".h",".cpp",".cxx",".cc",".c",".cs",".html",".js",
@@ -40,14 +37,24 @@ def getSizeForHuman(size):
     return "%0.1f GB" % (size/1024.0/1024.0/1024.0)
 
 def handlePath(name, _path):
-    if name not in paths:
-        raise RuntimeError('Dir not found')
+    conn = sqlite3.connect('main.db')
     if os.path.normpath(_path).startswith(('/', '..')):
         raise RuntimeError('How dare you!')
     _path = _path.encode('utf8')
-    root, uploadable = paths[name]
-    path = os.path.join(root, _path)
-    return (_path, path, uploadable)
+    c = conn.cursor()
+    try:
+        c.execute('select * from path where name=?', (name, ))
+        t_name, t_path, t_editable = c.fetchone()
+        path = os.path.join(t_path, _path)
+        return (_path, path, t_editable)
+    except sqlite3.OperationalError:
+        c.execute('create table path (name varchar primary key, '
+                  'root varchar, editable boolean)')
+        raise RuntimeError('Dir not found')
+    except TypeError:
+        raise RuntimeError('Dir not found')
+    finally:
+        conn.close()
 
 class ZipDownload:
     def GET(self, name, _path):
