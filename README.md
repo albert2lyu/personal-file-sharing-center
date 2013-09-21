@@ -1,38 +1,16 @@
-# Iron Man - a Personal File Sharing Center
+# Web文件分享
 
-It's a simple web APP for shareing files with others. It is inspired 
-by [SimpleHTTPServer](http://docs.python.org/2/library/simplehttpserver.html) in Python.
+类似SimpleHTTPServer的web文件分享页面，但是：
 
-## Features
-* It's COOL!
-* HTML5 Drag & Drop
-* One Command Start
+- 可以配置很多个文件夹（类似Dropbox的分享）
+- 更好的UI
+- 支持上传（可选）
+- 支持下载所有文件（ZIP）
 
-## Usage
-1. [Download the latest release](https://github.com/goace/personal-file-sharing-center/archive/master.zip) or `git clone git://github.com/goace/personal-file-sharing-center.git`
-2. Edit `config.py`, set `root` to the directory which you want to share. eg. `root = /home/xxx/center`
-3. Create this dir if it doesn't exist. eg. `mkdir /home/xxx/center`
-4. Start the daemon: `$ python index.py [port]`
-5. Access it from your browser : http://hostname[:port]
-6. Enjoy it.
+使用：
 
-## Advanced
-If you want a better perfomence and higher concurrency, you can deploy it with nginx and uwsgi.  
+使用`web.py`写的，直接运行`python index.py [port]`运行网页服务器。
 
-If you have no idea how to set nginx and uwsgi, the following may help...
+之后，为了编辑分享的文件夹列表，使用了`sqliteboy`编辑，运行`python sqliteboy.py main.db [PORT]`，
+在web页面上插入要分享的文件夹的名字、路径和是否可以上传。
 
-1. Copy `conf/upload.conf` to the conf path of nginx(maybe /etc/nginx/sites-enaled).
-2. Modify `upload.conf` according to your own condition, then reload nginx.
-3. Chdir to the root path of my project.
-4. Quick start uwsgi: `uwsgi -w index -s :9999` (choose whatever port you like, but must match the setting in upload.conf)
-5. or you can [start uwsgi via upstart](http://uwsgi-docs.readthedocs.org/en/latest/Upstart.html). More about [start uwsgi app.](http://uwsgi-docs.readthedocs.org/en/latest/WSGIquickstart.html)
-
-## Future Work
-* Multiple file upload.
-* User authentication.
-
-## Screenshot
-<img src="http://www.orzace.com/wp-content/uploads/2013/04/28J785ZZQ_LQ17_J.jpg"/>
-
-## License
-Iron Man is available under the GPLv2. See the LICENSE file for more info.
