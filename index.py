@@ -48,10 +48,6 @@ def handlePath(name, _path):
         t_path = t_path.encode('utf8')
         path = os.path.join(t_path, _path)
         return (_path, path, t_editable)
-    except sqlite3.OperationalError:
-        c.execute('create table path (name varchar primary key, '
-                  'root varchar, editable boolean)')
-        raise RuntimeError('Dir not found')
     except TypeError:
         raise RuntimeError('Dir not found')
     finally:
@@ -127,5 +123,13 @@ app = web.application(urls,globals())
 application = app.wsgifunc()
 
 if __name__ == "__main__":
+    conn = sqlite3.connect('main.db')
+    c = conn.cursor()
+    c.execute('select * from sqlite_master')
+    if not c.fetchall():
+        c.execute('create table path (name varchar primary key, '
+                  'root varchar, editable boolean)')
+    conn.commit()
+    conn.close()
     app.run()
     
