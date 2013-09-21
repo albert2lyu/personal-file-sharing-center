@@ -45,6 +45,7 @@ def handlePath(name, _path):
     try:
         c.execute('select * from path where name=?', (name, ))
         t_name, t_path, t_editable = c.fetchone()
+        t_path = t_path.encode('utf8')
         path = os.path.join(t_path, _path)
         return (_path, path, t_editable)
     except sqlite3.OperationalError:
@@ -58,7 +59,6 @@ def handlePath(name, _path):
 
 class ZipDownload:
     def GET(self, name, _path):
-        print name, _path
         try:
             _path, path, uploadable = handlePath(name, _path)
         except RuntimeError as err:
